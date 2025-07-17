@@ -24,8 +24,8 @@ void main() async {
   await notificationManager.initialize();
 
   // Initialize background service for notifications
-  final backgroundService = BackgroundService();
-  await backgroundService.initializeService();
+  final backgroundService = BackgroundReminderService();
+  await backgroundService.initialize();
 
   runApp(
     MultiProvider(

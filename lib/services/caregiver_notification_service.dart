@@ -3,13 +3,16 @@ import '../database/db_helper.dart';
 import '../models/medicine.dart';
 
 class CaregiverNotificationService {
-  static final CaregiverNotificationService _instance = CaregiverNotificationService._();
+  static final CaregiverNotificationService _instance =
+      CaregiverNotificationService._();
   factory CaregiverNotificationService() => _instance;
   CaregiverNotificationService._();
 
   final DBHelper _dbHelper = DBHelper();
 
   // Create notification for missed medication
+  /// Annotated for entry-point to ensure availability in release builds
+  @pragma('vm:entry-point')
   Future<void> createMissedMedicationNotification({
     required int userId,
     required int medicationId,
@@ -25,7 +28,8 @@ class CaregiverNotificationService {
       return;
     }
 
-    final message = 'Missed medication: $medicationName ($dosage) scheduled for $scheduledTime';
+    final message =
+        'Missed medication: $medicationName ($dosage) scheduled for $scheduledTime';
 
     // Create a notification for each caregiver
     for (final caregiver in caregivers) {
@@ -35,7 +39,9 @@ class CaregiverNotificationService {
         medicationId: medicationId,
         message: message,
       );
-      debugPrint('Created missed medication notification for caregiver ${caregiver['user_id']}');
+      debugPrint(
+        'Created missed medication notification for caregiver ${caregiver['user_id']}',
+      );
     }
   }
 
@@ -58,7 +64,8 @@ class CaregiverNotificationService {
     }
 
     final timeframe = isDayBefore ? 'tomorrow' : 'in 4 hours';
-    final message = 'Upcoming appointment $timeframe with Dr. $doctorName at $appointmentTime on $appointmentDate (Location: $location)';
+    final message =
+        'Upcoming appointment $timeframe with Dr. $doctorName at $appointmentTime on $appointmentDate (Location: $location)';
 
     // Create a notification for each caregiver
     for (final caregiver in caregivers) {
@@ -68,11 +75,15 @@ class CaregiverNotificationService {
         appointmentId: appointmentId,
         message: message,
       );
-      debugPrint('Created appointment reminder notification for caregiver ${caregiver['user_id']}');
+      debugPrint(
+        'Created appointment reminder notification for caregiver ${caregiver['user_id']}',
+      );
     }
   }
 
   // Check for missed medications
+  /// Annotated for entry-point to ensure availability in release builds
+  @pragma('vm:entry-point')
   Future<void> checkMissedMedications() async {
     final users = await _dbHelper.getUsers();
 
@@ -110,7 +121,9 @@ class CaregiverNotificationService {
               scheduledTime: medicine.formattedTime,
             );
 
-            debugPrint('Detected missed medication: ${medicine.name} for user $userId');
+            debugPrint(
+              'Detected missed medication: ${medicine.name} for user $userId',
+            );
           }
         }
       }
@@ -118,7 +131,9 @@ class CaregiverNotificationService {
   }
 
   // Get all notifications for a caregiver
-  Future<List<Map<String, dynamic>>> getCaregiverNotifications(int caregiverId) async {
+  Future<List<Map<String, dynamic>>> getCaregiverNotifications(
+    int caregiverId,
+  ) async {
     return await _dbHelper.getCaregiverNotifications(caregiverId);
   }
 

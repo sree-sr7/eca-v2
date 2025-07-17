@@ -15,6 +15,8 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
   bool _isInitialized = false;
 
+  /// Annotated for entry-point to ensure availability in release builds
+  @pragma('vm:entry-point')
   Future<void> initialize() async {
     if (_isInitialized) return;
 
@@ -202,6 +204,8 @@ class NotificationService {
     }
   }
 
+  /// Annotated for entry-point to ensure availability in release builds
+  @pragma('vm:entry-point')
   Future<void> scheduleMedicineReminder(Medicine medicine) async {
     if (!_isInitialized) await initialize();
 
@@ -224,9 +228,8 @@ class NotificationService {
               ? scheduledDate.add(const Duration(days: 1))
               : scheduledDate;
 
-      // Ensure the color is properly handled
-      final Color? medicineColor =
-          medicine.color is Color ? medicine.color : null;
+      // Use the medicine color for notification
+      final Color medicineColor = medicine.color;
 
       await _localNotifications.zonedSchedule(
         medicine.id.hashCode,
@@ -260,6 +263,8 @@ class NotificationService {
     }
   }
 
+  /// Annotated for entry-point to ensure availability in release builds
+  @pragma('vm:entry-point')
   Future<void> scheduleExpiryAlert(Medicine medicine) async {
     if (!_isInitialized) await initialize();
 
@@ -307,6 +312,8 @@ class NotificationService {
     }
   }
 
+  /// Annotated for entry-point to ensure availability in release builds
+  @pragma('vm:entry-point')
   Future<void> scheduleLowStockAlert(Medicine medicine) async {
     if (!_isInitialized) await initialize();
 
@@ -372,6 +379,8 @@ class NotificationService {
     }
   }
 
+  /// Annotated for entry-point to ensure availability in release builds
+  @pragma('vm:entry-point')
   Future<void> showAppointmentReminder(
     int appointmentId,
     String doctorName,

@@ -20,12 +20,6 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <service
-            android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:exported="false"
-            android:stopWithTask="false"
-            android:foregroundServiceType="location|dataSync"
-            tools:replace="android:exported"/>
-        <service
             android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
             android:exported="false"
             android:stopWithTask="false"
