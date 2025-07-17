@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../database/db_helper.dart';
 
 class FirebaseNotificationService {
-  static final FirebaseNotificationService _instance = FirebaseNotificationService._internal();
+  static final FirebaseNotificationService _instance =
+      FirebaseNotificationService._internal();
   final DBHelper _dbHelper = DBHelper();
   late FirebaseDatabase _database;
   bool _initialized = false;
@@ -34,7 +35,7 @@ class FirebaseNotificationService {
     }
 
     try {
-      final notificationRef = _database.reference().child('sos_notifications').push();
+      final notificationRef = _database.ref('sos_notifications').push();
 
       // Prepare data for Firebase (remove any SQLite-specific fields)
       final Map<String, dynamic> firebaseData = {
@@ -54,10 +55,9 @@ class FirebaseNotificationService {
       await notificationRef.set(firebaseData);
 
       // Update local notification with Firebase ID
-      await _dbHelper.updateNotification(
-          notification['notification_id'],
-          {'firebase_id': notificationRef.key}
-      );
+      await _dbHelper.updateNotification(notification['notification_id'], {
+        'firebase_id': notificationRef.key,
+      });
     } catch (e) {
       debugPrint('Error syncing SOS notification to Firebase: $e');
 
@@ -79,8 +79,8 @@ class FirebaseNotificationService {
       initialize();
     }
 
-    final notificationsQuery = _database.reference()
-        .child('sos_notifications')
+    final notificationsQuery = _database
+        .ref('sos_notifications')
         .orderByChild('caregiver_id')
         .equalTo(caregiverId);
 

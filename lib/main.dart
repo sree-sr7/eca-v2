@@ -12,9 +12,7 @@ void main() async {
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ),
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
 
   // Initialize app settings
@@ -41,7 +39,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +56,7 @@ class MyApp extends StatelessWidget {
         cardColor: AppColors.lightCardColor,
         useMaterial3: true,
         fontFamily: 'SF Pro Display',
-        dialogBackgroundColor: Colors.white,
+        dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
         colorScheme: ColorScheme.light(
           primary: AppColors.primaryColor,
           secondary: AppColors.accentColor,
@@ -73,7 +71,7 @@ class MyApp extends StatelessWidget {
         cardColor: AppColors.darkCardColor,
         useMaterial3: true,
         fontFamily: 'SF Pro Display',
-        dialogBackgroundColor: AppColors.darkCardColor,
+        dialogTheme: DialogThemeData(backgroundColor: AppColors.darkCardColor),
         colorScheme: ColorScheme.dark(
           primary: AppColors.primaryColor,
           secondary: AppColors.accentColor,
@@ -84,9 +82,9 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MediaQuery(
           // Apply the text scaling factor to the entire app
-          data: MediaQuery.of(context).copyWith(
-            textScaleFactor: settings.textSize,
-          ),
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(settings.textSize)),
           child: child!,
         );
       },

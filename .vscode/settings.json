@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/backup/eca/project/windows"
+    "cmake.sourceDirectory": "D:/backup/eca/project/windows",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

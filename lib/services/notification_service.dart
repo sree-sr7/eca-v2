@@ -12,7 +12,7 @@ class NotificationService {
   NotificationService._();
 
   final FlutterLocalNotificationsPlugin _localNotifications =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   bool _isInitialized = false;
 
   Future<void> initialize() async {
@@ -22,7 +22,9 @@ class NotificationService {
     tz_init.initializeTimeZones();
 
     // Initialize local notifications
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const darwinSettings = DarwinInitializationSettings(
       requestAlertPermission: false, // We'll request permissions separately
       requestBadgePermission: false,
@@ -53,8 +55,10 @@ class NotificationService {
 
   Future<void> _createNotificationChannels() async {
     final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-    _localNotifications.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+        _localNotifications
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
 
     if (androidPlugin == null) return;
 
@@ -119,14 +123,16 @@ class NotificationService {
     // For Android
     if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-      _localNotifications.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+          _localNotifications
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
 
       if (androidPlugin == null) return false;
 
       // Request Android notification permissions
       try {
-        final result = await androidPlugin.requestPermission();
+        final result = await androidPlugin.requestNotificationsPermission();
         debugPrint('Android notification permission result: $result');
         return result ?? false;
       } catch (e) {
@@ -213,12 +219,14 @@ class NotificationService {
       );
 
       // If time has passed for today, schedule for tomorrow
-      final effectiveDate = scheduledDate.isBefore(now)
-          ? scheduledDate.add(const Duration(days: 1))
-          : scheduledDate;
+      final effectiveDate =
+          scheduledDate.isBefore(now)
+              ? scheduledDate.add(const Duration(days: 1))
+              : scheduledDate;
 
       // Ensure the color is properly handled
-      final Color? medicineColor = medicine.color is Color ? medicine.color : null;
+      final Color? medicineColor =
+          medicine.color is Color ? medicine.color : null;
 
       await _localNotifications.zonedSchedule(
         medicine.id.hashCode,
@@ -241,12 +249,12 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
         payload: medicine.id.toString(),
       );
-      debugPrint('Scheduled medicine reminder for ${medicine.name} at ${effectiveDate.toString()}');
+      debugPrint(
+        'Scheduled medicine reminder for ${medicine.name} at ${effectiveDate.toString()}',
+      );
     } catch (e) {
       debugPrint('Error scheduling medicine reminder: $e');
     }
@@ -257,11 +265,14 @@ class NotificationService {
 
     try {
       // Format the expiry date properly
-      final expiryFormatted = DateFormat('MMM d, yyyy').format(medicine.expiryDate);
+      final expiryFormatted = DateFormat(
+        'MMM d, yyyy',
+      ).format(medicine.expiryDate);
 
       // Calculate when to send notification (7 days before expiry)
-      final expiryWarningDate = medicine.expiryDate
-          .subtract(const Duration(days: 7));
+      final expiryWarningDate = medicine.expiryDate.subtract(
+        const Duration(days: 7),
+      );
 
       // Only schedule if the warning date is in the future
       if (expiryWarningDate.isBefore(DateTime.now())) return;
@@ -288,8 +299,6 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
         payload: medicine.id.toString(),
       );
       debugPrint('Scheduled expiry alert for ${medicine.name}');
@@ -364,16 +373,19 @@ class NotificationService {
   }
 
   Future<void> showAppointmentReminder(
-      int appointmentId,
-      String doctorName,
-      String title,
-      String body,
-      DateTime scheduledTime) async {
+    int appointmentId,
+    String doctorName,
+    String title,
+    String body,
+    DateTime scheduledTime,
+  ) async {
     if (!_isInitialized) await initialize();
 
     try {
       final notificationId = 'appointment_$appointmentId'.hashCode;
-      debugPrint('Creating appointment reminder with ID: $notificationId for time: ${scheduledTime.toString()}');
+      debugPrint(
+        'Creating appointment reminder with ID: $notificationId for time: ${scheduledTime.toString()}',
+      );
 
       await _localNotifications.zonedSchedule(
         notificationId,
@@ -395,11 +407,11 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
         payload: 'appointment_$appointmentId',
       );
-      debugPrint('Scheduled appointment reminder for doctor: $doctorName at ${scheduledTime.toString()}');
+      debugPrint(
+        'Scheduled appointment reminder for doctor: $doctorName at ${scheduledTime.toString()}',
+      );
     } catch (e) {
       debugPrint('Error scheduling appointment reminder: $e');
     }
