@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "575100074387",
+    "project_id": "elderl-care-app",
+    "storage_bucket": "elderl-care-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575100074387:android:04ad0aa14688374b2fd066",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwg-gfvPt6CsU6M8MthRumoNMdt8Goumg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
