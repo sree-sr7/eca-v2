@@ -6,6 +6,7 @@ import 'utils/app_colors.dart';
 import 'screens/settings_screen.dart';
 import 'services/background_service.dart';
 import 'services/notification_manager.dart';
+import 'services/widget_optimization_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,11 +28,16 @@ void main() async {
   final backgroundService = BackgroundReminderService();
   await backgroundService.initialize();
 
+  // Initialize widget optimization service for high refresh rate support
+  final widgetOptimizationService = WidgetOptimizationService();
+  await widgetOptimizationService.initialize();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: appSettings),
         Provider.value(value: notificationManager),
+        Provider.value(value: widgetOptimizationService),
       ],
       child: const MyApp(),
     ),

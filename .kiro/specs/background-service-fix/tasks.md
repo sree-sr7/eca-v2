@@ -1,14 +1,14 @@
 # Implementation Plan
 
-- [ ] 1. Set up Firebase Cloud Messaging (FCM) integration
+- [ ] 1. Complete Firebase Cloud Messaging (FCM) integration
 
-  - Configure Firebase project and add FCM dependencies to pubspec.yaml
-  - Initialize FCM service with proper permissions for Android
-  - Implement device token management and storage in Firebase
-  - _Requirements: 3.1, 3.2, 3.3_
+  - Implement FCMService class with device token management and storage
+  - Add FCM initialization and permission handling for Android/iOS
+  - Create caregiver device token registration and management system
+  - Test FCM push notification delivery to caregiver devices
+  - _Requirements: 3.1, 3.2, 3.3, 14.1, 14.2, 14.3, 14.4_
 
 - [x] 2. Fix background service with proper entry-point annotations
-
 
   - Add @pragma('vm:entry-point') annotations to all background service methods
   - Configure WorkManager plugin with platform-specific settings
@@ -20,35 +20,36 @@
   - Create NotificationHandler with medication, appointment, and alert methods
   - Implement appointment notification timing (1 day, 4 hours, 60 minutes before)
   - Add low stock and expiry alert functionality for medications
-  - _Requirements: 1.2, 2.1, 2.2_
+  - _Requirements: 1.2, 2.1, 2.2, 10.1, 10.2, 10.3, 10.4_
 
-- [ ] 4. Create caregiver notification system with FCM
+- [ ] 4. Enhance caregiver notification system with FCM
 
-  - Implement FCMService for sending push notifications to caregiver devices
-  - Create FirebaseSyncService for real-time missed event synchronization
-  - Add missed medication and appointment alert functionality
-  - _Requirements: 3.1, 3.2, 3.3_
+  - Integrate FCMService with existing caregiver notification system
+  - Update FirebaseSyncService to use FCM for real-time notifications
+  - Add FCM push notifications for missed medication and appointment alerts
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
 - [ ] 5. Implement SOS emergency alert system
 
   - Create SOS alert functionality with Firebase integration
   - Add location sharing capability (optional) for emergency alerts
   - Implement real-time caregiver notification for SOS events
-  - _Requirements: 3.1, 3.3_
+  - _Requirements: 13.1, 13.2, 13.3, 13.4_
 
 - [ ] 6. Add logout functionality and authentication service
 
   - Create AuthService with logout, login status check, and data clearing methods
   - Implement proper user data cleanup on logout
   - Clear FCM tokens and Firebase authentication on logout
-  - _Requirements: 4.4_
+  - Update existing logout UI to use new AuthService
+  - _Requirements: 11.1, 11.2, 11.3, 11.4_
 
 - [ ] 7. Optimize UI performance for high refresh rate displays
 
   - Implement RefreshRateHandler to detect and set optimal refresh rates (120Hz+)
   - Add PerformanceMonitor for frame rate tracking and optimization
   - Enable high refresh rate support for compatible devices
-  - _Requirements: 6.1, 6.2, 6.5_
+  - _Requirements: 6.1, 6.2, 6.5, 12.1, 12.2, 12.3, 12.4_
 
 - [ ] 8. Move database operations to background isolates
 
@@ -78,26 +79,31 @@
   - Add UIErrorHandler for user-friendly error display
   - _Requirements: 1.3, 4.3, 5.1_
 
-- [ ] 12. Optimize widget rendering and implement lazy loading
+- [x] 12. Optimize widget rendering and implement lazy loading
+
+
+
 
   - Review and optimize complex widgets to prevent frame drops
   - Implement lazy loading for lists and data-heavy screens
   - Add loading indicators for async operations
   - _Requirements: 6.2, 6.3, 6.5_
 
-- [ ] 13. Create comprehensive testing suite
+- [ ] 13. Remove monetization and agency-related code
 
-  - Write unit tests for all new services (FCM, Auth, Background, Performance)
+  - Remove Razorpay and payment integration code from services and UI
+  - Clean up payment-related screens and components
+  - Remove premium tiers and care level related functionality
+  - Update database cleanup to remove payment-related tables
+  - _Requirements: 9.1, 9.2, 9.3, 9.4_
+
+- [ ] 14. Create comprehensive testing suite
+
+  - Write unit tests for FCM service and authentication service
   - Create integration tests for notification delivery and database operations
   - Add performance tests for frame rate and memory usage
+  - Fix existing test issues and add missing test dependencies
   - _Requirements: All requirements validation_
-
-- [ ] 14. Remove monetization and agency-related code
-
-  - Remove Razorpay and payment integration code
-  - Clean up admin dashboard logic and UI components
-  - Remove premium tiers and care level related screens
-  - _Requirements: 9.1, 9.2, 9.3, 9.4_
 
 - [x] 15. Update dependencies and build configurations
 

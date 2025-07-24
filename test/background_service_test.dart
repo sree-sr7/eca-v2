@@ -1,13 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
-import '../lib/services/background_service.dart';
+import 'package:login_app/services/background_service.dart';
 
 void main() {
   group('BackgroundReminderService Tests', () {
-    late BackgroundReminderService backgroundService;
-
     setUp(() {
-      backgroundService = BackgroundReminderService();
+      // Setup for background service tests
     });
 
     test('should create singleton instance', () {
