@@ -22,6 +22,7 @@ dependencies:
   path_provider: ^2.1.5
   share_plus: ^11.0.0
   path: ^1.9.1
+  flutter_dotenv: ^5.2.1
 
   location: ^8.0.1
   permission_handler: ^12.0.1
@@ -46,6 +47,7 @@ flutter:
 
   assets:
     - assets/images/
+    - .env
 
   fonts:
     - family: SF Pro Display
