@@ -198,16 +198,6 @@ class DBHelper {
       )
     ''');
 
-    // Insert Default Admin
-    await db.insert('users', {
-      'first_name': 'Admin',
-      'last_name': 'User',
-      'age': 30,
-      'email': 'admin@eca.com',
-      'phone_number': '1234567890',
-      'password': '***REMOVED***',
-      'role': 'admin'
-    });
   }
 
   // Handle database upgrades
@@ -335,6 +325,18 @@ class DBHelper {
   Future<List<Map<String, dynamic>>> getUsers() async {
     final db = await database;
     return await db.query('users');
+  }
+
+  Future<bool> hasAdminUser() async {
+    final db = await database;
+    final admins = await db.query(
+      'users',
+      columns: ['user_id'],
+      where: 'role = ?',
+      whereArgs: ['admin'],
+      limit: 1,
+    );
+    return admins.isNotEmpty;
   }
 
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {

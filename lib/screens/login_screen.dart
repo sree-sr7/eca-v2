@@ -50,38 +50,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       // Force database initialization
       await _dbHelper.database;
       print("Database initialized successfully");
-
-      // Check if admin exists in database
-      final adminUser = await _dbHelper.getUserByEmail("admin@eca.com");
-      print("Admin user in database: $adminUser");
-
-      // If admin doesn't exist, try to create one
-      if (adminUser == null) {
-        print("Admin not found, attempting to create...");
-        try {
-          await _dbHelper.insertUser(
-            firstName: "Admin",
-            lastName: "User",
-            email: "admin@eca.com",
-            phoneNumber: "1234567890",
-            password: "***REMOVED***",
-            gender: "",
-            dateOfBirth: "",
-            age: 0,
-            address: "",
-            bloodGroup: "",
-            emergencyContactName: "",
-            emergencyContactPhone: "",
-            relationship: "",
-            chronicConditions: "",
-            allergies: "",
-            role: "admin",
-          );
-          print("Admin created successfully");
-        } catch (e) {
-          print("Failed to create admin: $e");
-        }
-      }
     } catch (e) {
       print("Database initialization error: $e");
     }
@@ -130,11 +98,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     });
 
     try {
-      print("Attempting login with: $email / $password");
-
       // Get the user with the provided email
       final user = await _dbHelper.getUserByEmail(email);
-      print("User found: $user");
 
       if (user != null && user['password'] == password) {
         // Check user role
