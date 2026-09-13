@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'database/db_helper.dart';
+import 'screens/initial_admin_setup_screen.dart';
 import 'screens/login_screen.dart';
 import 'utils/app_colors.dart';
 import 'screens/settings_screen.dart';
@@ -10,6 +13,7 @@ import 'services/widget_optimization_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
@@ -94,7 +98,7 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const LoginScreen(),
+      home: const StartupGate(),
     );
   }
 
@@ -130,5 +134,73 @@ class MyApp extends StatelessWidget {
       );
     }
     return base;
+  }
+}
+
+class StartupGate extends StatefulWidget {
+  const StartupGate({super.key});
+
+  @override
+  State<StartupGate> createState() => _StartupGateState();
+}
+
+class _StartupGateState extends State<StartupGate> {
+  final DBHelper _dbHelper = DBHelper();
+  late Future<bool> _adminExists;
+
+  @override
+  void initState() {
+    super.initState();
+    _adminExists = _checkForAdmin();
+  }
+
+  Future<bool> _checkForAdmin() => _dbHelper.hasAdminUser();
+
+  void _retry() {
+    setState(() {
+      _adminExists = _checkForAdmin();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: _adminExists,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Unable to initialize the local database.',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _retry,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return snapshot.data == true
+            ? const LoginScreen()
+            : const InitialAdminSetupScreen();
+      },
+    );
   }
 }

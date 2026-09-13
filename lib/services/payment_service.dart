@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../database/db_helper.dart';
 
@@ -75,13 +76,24 @@ class PaymentService {
     required String userPhone,
     required String userName,
   }) async {
+    final razorpayKey = dotenv.env['RAZORPAY_KEY_ID']?.trim();
+    if (razorpayKey == null || razorpayKey.isEmpty) {
+      return {
+        'success': false,
+        'message': 'Razorpay is not configured. Set RAZORPAY_KEY_ID in .env.',
+        'timestamp': DateTime.now().toIso8601String(),
+        'status': 'Failed',
+        'paymentMethod': 'Razorpay',
+      };
+    }
+
     _paymentCompleter = Completer<Map<String, dynamic>>();
 
     // Razorpay accepts amount in paise (1 INR = 100 paise)
     final amountInPaise = (amount * 100).toInt();
 
     var options = {
-      'key': '***REMOVED***',  // Replace with your actual Razorpay key
+      'key': razorpayKey,
       'amount': amountInPaise,
       'name': 'Elderly Care App',
       'description': description,
